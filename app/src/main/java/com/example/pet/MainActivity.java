@@ -1,7 +1,10 @@
 package com.example.pet;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
+import com.example.pet.ui.issue.IssueActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,5 +29,6 @@ public class MainActivity extends AppCompatActivity {
        // NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
     }
+
 
 }

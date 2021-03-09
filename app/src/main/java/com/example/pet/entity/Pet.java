@@ -7,9 +7,18 @@ import java.util.ArrayList;
 public class Pet {
     ArrayList<Image> images;
     String name,story;
+    int id;
     int age,sex; //男生0，女生1
     int vaccine,sterillization,expelling;  //0代表未做，1代表做了
     //  vaccine疫苗，sterillization绝育，expelling驱虫
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getSex() {
         return sex;

@@ -4,15 +4,17 @@
     package="com.example.pet">
 
     <application
-        android:debuggable="true"
         android:allowBackup="true"
+        android:debuggable="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/NoTitle"
         tools:ignore="HardcodedDebugMode">
-        <activity android:name=".ui.issue.IssueActivity"></activity>
+        <activity android:name=".ui.detail.testActivity"></activity>
+        <activity android:name=".ui.detail.DetailActivity" />
+        <activity android:name=".ui.issue.IssueActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">

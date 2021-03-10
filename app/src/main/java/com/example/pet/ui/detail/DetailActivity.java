@@ -116,8 +116,8 @@ public class DetailActivity extends AppCompatActivity {
          */
         @Override
         public void onPageSelected(int position) {
-            Log.e("textStrings", "position==" + position);
-            Log.e("textStrings", "position%" + "%" + imageIds.length + "==" + position % imageIds.length);
+            Log.i("textStrings", "position==" + position);
+            Log.i("textStrings", "position%" + "%" + imageIds.length + "==" + position % imageIds.length);
             //设置对应页面的文本信息
             BannerTittle.setText(textStrings[position % imageIds.length]);
             //把上一个高亮设置默认灰色
@@ -145,14 +145,14 @@ public class DetailActivity extends AppCompatActivity {
             if (ViewPager.SCROLL_STATE_DRAGGING == state) {
                 isDragging = true;
                 mHandler.removeCallbacksAndMessages(null);
-                Log.e(Tag, "SCROLL_STATE_DRAGGING-----------");
+                Log.i(Tag, "SCROLL_STATE_DRAGGING-----------");
             } else if (ViewPager.SCROLL_STATE_IDLE == state) {
-                Log.e(Tag, "SCROLL_STATE_IDLE-----------");
+                Log.i(Tag, "SCROLL_STATE_IDLE-----------");
             } else if (ViewPager.SCROLL_STATE_SETTLING == state && isDragging) {
                 isDragging = false;
                 mHandler.removeCallbacksAndMessages(null);
                 mHandler.sendEmptyMessageDelayed(0, 4000);
-                Log.e(Tag, "SCROLL_STATE_SETTLING------------");
+                Log.i(Tag, "SCROLL_STATE_SETTLING------------");
             }
         }
     }

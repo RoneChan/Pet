@@ -1,9 +1,11 @@
 package com.example.pet.ui.detail;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,13 +13,16 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.pet.MainActivity;
 import com.example.pet.R;
 import com.example.pet.control.MyPagerAdapter;
+import com.example.pet.entity.PetDetail;
 
 import java.util.ArrayList;
 //https://blog.csdn.net/u013144863/article/details/52958669?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_utm_term-0&spm=1001.2101.3001.4242
@@ -28,6 +33,12 @@ public class DetailActivity extends AppCompatActivity {
     private TextView BannerTittle;//轮播图标题
     private LinearLayout BannerPointLayout;
     private ArrayList<ImageView> mImageViews;
+    private ConstraintLayout cl_back_home,cl_collection;
+    private Button btn_apply;
+    private ImageView iv_collection;
+    private int flag_collection;
+    PetDetail petDetail;
+
 
 
     private Handler mHandler = new Handler() {
@@ -58,6 +69,9 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        petDetail=new PetDetail();
+        petDetail.setFlagCollection(0);
+
         //ViewPager  使用
         //1在布局中定义ViewPager
         //2在代码中实例化ViewPager
@@ -93,6 +107,52 @@ public class DetailActivity extends AppCompatActivity {
         //设置中间位置
         BannerViegPager.setCurrentItem(Integer.MAX_VALUE / 2 - (Integer.MAX_VALUE / 2) % mImageViews.size());
         mHandler.sendEmptyMessageDelayed(0, 3000);
+
+        cl_back_home=findViewById(R.id.cl_detail_backhome);
+        cl_collection=findViewById(R.id.cl_detail_collection);
+        btn_apply=findViewById(R.id.btn_detail_apply);
+
+        cl_back_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DetailActivity.this, MainActivity.class);
+                intent.putExtra("fragment",0);
+                startActivity(intent);
+            }
+        });
+
+        iv_collection= findViewById(R.id.iv_detail_collection);
+        flag_collection = petDetail.getFlagCollection();
+        cl_collection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(flag_collection==0){
+                    //收藏逻辑，更新数据库
+                    //未实现
+                    flag_collection=1;
+                    //改变图标
+                    iv_collection.setImageResource(R.drawable.ic_collect_selected);
+
+                }else {
+                    //收藏逻辑，更新数据库
+                    //未实现
+                    flag_collection=0;
+
+                    //改变图标
+                    iv_collection.setImageResource(R.drawable.ic_collect);
+
+                }
+
+            }
+        });
+
+        btn_apply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //未实现
+            }
+        });
+
     }
 
     class MyOnPageChangeLister implements ViewPager.OnPageChangeListener {

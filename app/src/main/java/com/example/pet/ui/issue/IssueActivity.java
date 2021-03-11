@@ -43,9 +43,8 @@ public class IssueActivity extends AppCompatActivity {
         pet.setAge(2);
         pet.setSex(0);
         pet.setExpelling(1);
-        pet.setImages(null);
+        pet.setImage(null);
         pet.setName("旺财");
-        pet.setStory("流浪狗");
         pet.setSterillization(1);
         pet.setVaccine(1);
 

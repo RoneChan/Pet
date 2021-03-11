@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.pet.ui.home.HomeFragment;
 import com.example.pet.ui.issue.IssueActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -28,6 +29,15 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
        // NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
+
+        int id = getIntent().getIntExtra("id", 0);
+        if (id == 0) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.nav_host_fragment,new HomeFragment())
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 
 

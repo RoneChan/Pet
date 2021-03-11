@@ -58,6 +58,8 @@ public class MyPagerAdapter extends androidx.viewpager.widget.PagerAdapter {
             Log.i("IT_Real", "instantiateItem: 加载了");
             container.addView(imageView);
         }
+
+        imageView.setTag(position);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -5,7 +5,7 @@ import android.media.Image;
 import java.util.ArrayList;
 
 public class Pet {
-    ArrayList<Image> images;
+    Image image;
     String name,story;
     int id;
     int age,sex; //男生0，女生1
@@ -28,18 +28,13 @@ public class Pet {
         this.sex = sex;
     }
 
-    public ArrayList<Image> getImages() {
-        return images;
+    public Image getImage() {
+        return image;
     }
 
-    public void setImages(ArrayList<Image> images) {
-        this.images = images;
+    public void setImage(Image image) {
+        this.image = image;
     }
-
-    public Image getImage(int index) {
-        return images.get(index);
-    }
-
 
     public String getName() {
         return name;
@@ -49,20 +44,20 @@ public class Pet {
         this.name = name;
     }
 
-    public String getStory() {
-        return story;
-    }
-
-    public void setStory(String story) {
-        this.story = story;
-    }
-
     public int getAge() {
         return age;
     }
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public String getStory() {
+        return story;
+    }
+
+    public void setStory(String story) {
+        this.story = story;
     }
 
     public int getVaccine() {

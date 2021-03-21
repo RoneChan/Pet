@@ -2,12 +2,14 @@ package com.example.pet;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.example.pet.ui.home.HomeFragment;
 import com.example.pet.ui.issue.IssueActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -30,14 +32,7 @@ public class MainActivity extends AppCompatActivity {
        // NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-        int id = getIntent().getIntExtra("id", 0);
-        if (id == 0) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.nav_host_fragment,new HomeFragment())
-                    .addToBackStack(null)
-                    .commit();
-        }
+
     }
 
 

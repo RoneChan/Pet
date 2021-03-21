@@ -1,9 +1,10 @@
 package com.example.pet.entity;
 
+import android.graphics.Bitmap;
 import android.media.Image;
 
 public class PetDetail {
-    Image image;
+    Bitmap image;
     String name,story;
     int id;
     int age,sex; //男生0，女生1
@@ -12,7 +13,7 @@ public class PetDetail {
     String condition;
     String cash,cashTime,cashReturn;
 
-    public Image getImage() {
+    public Bitmap getImage() {
         return image;
     }
 

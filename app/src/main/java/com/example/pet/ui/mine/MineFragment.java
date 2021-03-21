@@ -15,6 +15,8 @@ import com.example.pet.ui.issue.IssueActivity;
 
 public class MineFragment extends Fragment {
     ConstraintLayout cl_issue;
+    ConstraintLayout cl_collect;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -26,9 +28,22 @@ public class MineFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(),IssueActivity.class);
+                intent.putExtra("titleFlag",1);
                 startActivity(intent);
             }
         });
+
+        cl_collect=view.findViewById(R.id.cl_collect);
+        cl_collect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(),IssueActivity.class);
+                intent.putExtra("titleFlag",0);
+                startActivity(intent);
+            }
+        });
+
+
         return view;
     }
 }

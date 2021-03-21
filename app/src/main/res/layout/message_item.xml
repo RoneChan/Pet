@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="186dp"
+        tools:layout_editor_absoluteY="80dp">
+
+        <ImageView
+            android:id="@+id/iv_message_img"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_communication" />
+
+        <TextView
+            android:id="@+id/tv_message_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:textSize="17sp"
+            android:textColor="@color/colorCharacter"
+            android:text="名字"
+            app:layout_constraintStart_toEndOf="@+id/iv_message_img"
+            app:layout_constraintTop_toTopOf="@+id/iv_message_img" />
+
+        <TextView
+            android:id="@+id/tv_message_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="一二三一二三一二三一二三一二三"
+            android:textColor="@color/colorGray"
+            android:textSize="15sp"
+            app:layout_constraintStart_toEndOf="@+id/iv_message_img"
+            app:layout_constraintTop_toBottomOf="@+id/tv_message_name" />
+
+        <ImageView
+            android:id="@+id/iv_new_message"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            app:layout_constraintEnd_toEndOf="@+id/iv_message_img"
+            app:layout_constraintTop_toTopOf="@+id/iv_message_img"
+            app:srcCompat="@drawable/ic_collect_selected" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

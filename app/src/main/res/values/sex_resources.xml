@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sex">
+        <item>女</item>
+        <item>男</item>
+    </string-array>
+
+    <string-array name="yesOrNot">
+        <item>是</item>
+        <item>否</item>
+    </string-array>
+
+    <string-array name="species">
+        <item>猫猫</item>
+        <item>狗狗</item>
+        <item>其他</item>
+    </string-array>
+</resources>

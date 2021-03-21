@@ -1,14 +1,11 @@
-package com.example.pet.ui.issue;
+package com.example.pet.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.example.pet.R;
 import com.example.pet.control.EndlessRecyclerOnScrollListener;
@@ -16,54 +13,37 @@ import com.example.pet.control.TAdapter;
 import com.example.pet.entity.Pet;
 
 import java.util.ArrayList;
-
-public class IssueActivity extends AppCompatActivity {
+//https://blog.csdn.net/qq_38356174/article/details/90716344?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.control&dist_request_id=&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.control
+public class ttActivity extends AppCompatActivity {
     RecyclerView recyclerView;
-    TAdapter tAdapter;
-    ImageView imageView;
-    ArrayList<Pet> petArrayList;
-    TextView title;
+    ArrayList<Pet> list;
+    TAdapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_issue);
+        setContentView(R.layout.activity_tt);
 
-        title=findViewById(R.id.tx_issue_title);
-        int titleFlag=getIntent().getIntExtra("titleFlag",-1);
-        if(titleFlag==1){
-            title.setText("我发布的");
-        }else if(titleFlag==0){
-            title.setText("我收藏的");
-        }
-        getWindow().setStatusBarColor(getResources().getColor(R.color.colorThem)); //设置状态颜色
-
-        imageView=findViewById(R.id.iv_issue_back);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("msg","我的发布activity结束");
-                finish(); //结束activiy
-            }
-        });
+        list=new ArrayList<>();
+        Pet pet1 = new Pet();
+        Pet pet2=new Pet();
+        pet1.setName("111");
+        pet2.setName("222");
+        list.add(pet1);
+        list.add(pet2);
+        list.add(pet1);
+        list.add(pet2);
+        list.add(pet1);
+        list.add(pet2);
+        list.add(pet1);
+        list.add(pet2);
+        list.add(pet1);
+        list.add(pet2);
 
 
-        //...获取数据
-        Pet pet = new Pet();
-        pet.setAge(2);
-        pet.setSex(0);
-        pet.setExpelling(1);
-        pet.setImage(null);
-        pet.setName("旺财");
-        pet.setSterillization(1);
-        pet.setVaccine(1);
-        petArrayList=new ArrayList<Pet>();
-        petArrayList.add(pet);
-        petArrayList.add(pet);
-        //...
-
-        recyclerView=findViewById(R.id.rv_issue);
-        tAdapter=new TAdapter(this,petArrayList);
+        recyclerView=findViewById(R.id.recyclerView);
+        adapter=new TAdapter(this,list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
         EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener=new EndlessRecyclerOnScrollListener() {
@@ -73,19 +53,21 @@ public class IssueActivity extends AppCompatActivity {
                 //...
                 Pet pet=new Pet();
                 pet.setName("333");
-                petArrayList.add(pet);
-                petArrayList.add(pet);
-                petArrayList.add(pet);
-                petArrayList.add(pet);
-                petArrayList.add(pet);
-                petArrayList.add(pet);
+                list.add(pet);
+                list.add(pet);
+                list.add(pet);
+                list.add(pet);
+                list.add(pet);
+                list.add(pet);
+                list.add(pet);
+                list.add(pet);
                 //获取数据后 传入adapter中上面写的更新数据的方法
-                tAdapter.updateData(petArrayList);
+                adapter.updateData(list);
             }
         };
 
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(tAdapter);
+        recyclerView.setAdapter(adapter);
         recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
 
         int lcp= layoutManager.findLastCompletelyVisibleItemPosition();
@@ -105,6 +87,7 @@ public class IssueActivity extends AppCompatActivity {
                 endlessRecyclerOnScrollListener.onLoadMore();
             }
         }
+
 
     }
 }

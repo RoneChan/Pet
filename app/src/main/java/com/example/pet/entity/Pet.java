@@ -1,22 +1,23 @@
 package com.example.pet.entity;
 
+import android.graphics.Bitmap;
 import android.media.Image;
 
 import java.util.ArrayList;
 
 public class Pet {
-    Image image;
+    Bitmap image;
     String name,story;
-    int id;
+    String id;
     int age,sex; //男生0，女生1
     int vaccine,sterillization,expelling;  //0代表未做，1代表做了
     //  vaccine疫苗，sterillization绝育，expelling驱虫
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -28,11 +29,11 @@ public class Pet {
         this.sex = sex;
     }
 
-    public Image getImage() {
+    public Bitmap getImage() {
         return image;
     }
 
-    public void setImage(Image image) {
+    public void setImage(Bitmap image) {
         this.image = image;
     }
 

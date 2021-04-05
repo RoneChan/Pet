@@ -16,4 +16,9 @@
         android:icon="@drawable/ic_user"
         android:title="@string/title_notifications" />
 
+    <item
+        android:id="@+id/navigation_video"
+        android:icon="@drawable/ic_video"
+        android:title="@string/title_video" />
+
 </menu>

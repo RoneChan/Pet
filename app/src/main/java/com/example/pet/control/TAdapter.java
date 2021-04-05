@@ -2,6 +2,8 @@ package com.example.pet.control;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +13,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.pet.R;
 import com.example.pet.entity.Pet;
+import com.example.pet.jdbc.NetworkSettings;
 import com.example.pet.ui.detail.DetailActivity;
 
 import java.util.ArrayList;
@@ -27,6 +31,10 @@ public class TAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
         mContext = context;
         pets = list;
     }
+    public void setArrayList( ArrayList<Pet> list){
+        pets = list;
+    }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -53,16 +61,16 @@ public class TAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             //展示数据
             Pet pet=pets.get(position);
             String name = pet.getName();
-
-            int age = 1;
-            String story = "sdfsfdfssfd";
-            int expelling=1;
-            int sterillization = 1;
-            int vaccine=1;
+            int age = pet.getAge();
+            String story = pet.getStory();
+            int expelling=pet.getExpelling();
+            int sterillization = pet.getSterillization();
+            int vaccine=pet.getVaccine();
+            String url1=pet.getUrl1();
 
             holder.itemView.setTag(position);
             ((ViewHolder) holder).name.setText(name);
-            ((ViewHolder) holder).age.setText(age+"");
+            ((ViewHolder) holder).age.setText(age+"岁");
             if(story.length()>12){
                 ((ViewHolder) holder).story.setText(story.substring(0,12)+"...");
             }else{
@@ -86,6 +94,8 @@ public class TAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             }else{
                 ((ViewHolder) holder).vaccine.setText("已免疫");
             }
+            Glide.with(mContext).load(url1).into(((ViewHolder) holder).img);
+           // ((ViewHolder) holder).img.setImageURI(Uri.parse(url1));
         }else if(holder instanceof FooterHolder){
             //底部“加载更多”item （等待动画用一个gif去实现）
 
@@ -148,9 +158,11 @@ public class TAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 public void onClick(View v) {
 
                     int position = (int) v.getTag();
-                    String id = pets.get(position).getId();
+                    Pet pet = pets.get(position);
                     Intent intent=new Intent(mContext, DetailActivity.class);
-                    intent.putExtra("id",id);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("pet",pet);
+                    intent.putExtras(bundle);
                     mContext.startActivity(intent);
 
                 }

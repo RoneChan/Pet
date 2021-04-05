@@ -18,6 +18,12 @@
         tools:layout="@layout/fragment_add" />
 
     <fragment
+        android:id="@+id/navigation_video"
+        android:name="com.example.pet.ui.video.VideoFragment"
+        android:label="@string/title_video"
+        tools:layout="@layout/fragment_video" />
+
+    <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.example.pet.ui.mine.MineFragment"
         android:label="@string/title_notifications"

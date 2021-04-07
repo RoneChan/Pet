@@ -5,7 +5,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,17 +20,38 @@ import com.example.pet.MainActivity;
 import com.example.pet.R;
 
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Toast;
+
 import com.example.pet.control.MyImageAdapter;
 import com.example.pet.entity.ImageBean;
 import com.example.pet.entity.MyImageBean;
 import com.example.pet.entity.Pet;
+import com.example.pet.jdbc.NetworkSettings;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.youth.banner.Banner;
 import com.youth.banner.indicator.CircleIndicator;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import cn.jzvd.JzvdStd;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+
+import static com.example.pet.MainActivity.NO_DATA;
 
 
 //https://blog.csdn.net/u013144863/article/details/52958669?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_utm_term-0&spm=1001.2101.3001.4242
@@ -36,12 +61,13 @@ public class DetailActivity extends AppCompatActivity {
     private ConstraintLayout cl_back_home,cl_collection;
     private Button btn_apply;
     private ImageView iv_collection;
-    private int flag_collection;
-    int flag;
+    private int flag_collection=0;
     Banner banner;
-
+    Pet pet;
     TextView tv_title,tv_name,tv_sex,tv_age,tv_expelling,tv_sterilization,tv_vaccine;
     TextView tv_story;
+    Handler handler;
+    final private int COLLECTED=006;
 
 
     @Override
@@ -57,9 +83,26 @@ public class DetailActivity extends AppCompatActivity {
         tv_sterilization=findViewById(R.id.tv_detail_sterilization);
         tv_vaccine=findViewById(R.id.tv_detail_vaccine);
         tv_story=findViewById(R.id.tv_detail_story);
+        btn_apply=findViewById(R.id.btn_detail_apply);
 
         Intent intent=getIntent();
-        Pet pet=(Pet) intent.getSerializableExtra("pet");
+        pet=(Pet) intent.getSerializableExtra("pet");
+        int type=intent.getIntExtra("type",-1);
+
+        btn_apply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+pet.getPhone()));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
+
+        if(type==1 || type==2){//从home跳转过来
+            btn_apply.setVisibility(View.VISIBLE);
+        }else if(type==3){
+            btn_apply.setVisibility(View.GONE);
+        }
 
         String name = pet.getName();
         String story = pet.getStory();
@@ -110,29 +153,19 @@ public class DetailActivity extends AppCompatActivity {
             tv_vaccine.setText("已免疫");
         }
         tv_story.setText(story);
+        QueryCollect(pet.getId());
         JzvdStd jzvdStd = (JzvdStd) findViewById(R.id.jz_video_player);
 
-        String s= pet.getVedio();
+        String s= pet.getVideo();
         if(!s.equals("null")) {
-            jzvdStd.setUp(pet.getVedio()
+            jzvdStd.setUp(pet.getVideo()
                     , "", JzvdStd.SCREEN_NORMAL);
             Glide.with(this).load(pet.getUrl1()).into(jzvdStd.posterImageView);
         }else{
             jzvdStd.setVisibility(View.GONE);
         }
 
-        flag = intent.getIntExtra("flag",-1);
-        String id=intent.getStringExtra("id");
-        btn_apply=findViewById(R.id.btn_detail_apply);
-        /*
-        if(flag==0){//从home跳转
 
-        }else{//从发布跳转
-            btn_apply.setVisibility(View.INVISIBLE);
-
-        }
-
-         */
 
         ArrayList<ImageBean> imageBeans=new ArrayList<>();
         imageBeans.add(new ImageBean(R.drawable.test1));
@@ -161,14 +194,26 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
+        handler =new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what){
+                    case COLLECTED:
+                        flag_collection=1;
+                        iv_collection.setImageResource(R.drawable.ic_collect_selected);
+                        break;
+                }
+            }
+        };
+
         iv_collection= findViewById(R.id.iv_detail_collection);
-        flag_collection = 1;
         cl_collection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(flag_collection==0){
                     //收藏逻辑，更新数据库
-                    //未实现
+                    //未收藏->收藏
+                    ChangeCollect(1);
                     flag_collection=1;
                     //改变图标
                     iv_collection.setImageResource(R.drawable.ic_collect_selected);
@@ -176,6 +221,8 @@ public class DetailActivity extends AppCompatActivity {
                     //收藏逻辑，更新数据库
                     //未实现
                     flag_collection=0;
+                    //收藏->未收藏
+                    ChangeCollect(0);
                     //改变图标
                     iv_collection.setImageResource(R.drawable.ic_collect);
                 }
@@ -189,5 +236,79 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void ChangeCollect(int type){
+        OkHttpClient client = new OkHttpClient();
+        ObjectMapper mapper = new ObjectMapper();
+        MediaType mediaType = MediaType.parse("application/json;charset=utf-8");
+        Request request = null;
+        try {
+            request = new Request.Builder().url(NetworkSettings.CHANGE_COLLECT + "/?collectFlag=" + type+"&userId=u"+MainActivity.userId+"&issueId="+pet.getId()).put(
+                    RequestBody.create(
+                            mapper.writeValueAsString(pet), mediaType
+                    )
+            ).build();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                String str = e.getMessage();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                ResponseBody requestBody = response.body();
+                try {
+                    String str = requestBody.string();
+                    int flag = Integer.parseInt(str);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void QueryCollect(String issueId){
+        OkHttpClient client = new OkHttpClient();
+        ObjectMapper mapper = new ObjectMapper();
+        MediaType mediaType = MediaType.parse("application/json;charset=utf-8");
+        Request request = null;
+        try {
+            request = new Request.Builder().url(NetworkSettings.QUERY_COLLECT + "/?userId=u"+MainActivity.userId+"&issueId="+issueId).put(
+                    RequestBody.create(
+                            mapper.writeValueAsString(pet), mediaType
+                    )
+            ).build();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                String str = e.getMessage();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                ResponseBody requestBody = response.body();
+                try {
+                    String str = requestBody.string();
+                    int flag = Integer.parseInt(str);
+                    if(flag!=0){
+                        Message msg= new Message();
+                        msg.what=COLLECTED;
+                        handler.sendMessage(msg);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                }
+            }
+        });
     }
 }

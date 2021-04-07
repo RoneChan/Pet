@@ -75,12 +75,15 @@ public class IssueActivity extends AppCompatActivity {
         tv_no_date=findViewById(R.id.tv_issue_no_data);
         title = findViewById(R.id.tx_issue_title);
         int titleFlag = getIntent().getIntExtra("titleFlag", -1);
+        tAdapter = new TAdapter(this, petArrayList);
         if (titleFlag == 1) {
             title.setText("我发布的");
-            LoadPet(1);
+            tAdapter.setFlag(2);
+            LoadPet(titleFlag);
         } else if (titleFlag == 0) {
             title.setText("我收藏的");
-            LoadPet(0);
+            tAdapter.setFlag(3);
+            LoadPet(titleFlag);
         }
         getWindow().setStatusBarColor(getResources().getColor(R.color.colorThem)); //设置状态颜色
 
@@ -110,7 +113,7 @@ public class IssueActivity extends AppCompatActivity {
          */
 
         recyclerView = findViewById(R.id.rv_issue);
-        tAdapter = new TAdapter(this, petArrayList);
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(tAdapter);
@@ -186,12 +189,6 @@ public class IssueActivity extends AppCompatActivity {
                 ResponseBody requestBody = response.body();
                 try {
                     JSONArray jsonArray = new JSONArray(requestBody.string());
-                    if (jsonArray.length() == 0) {
-                        Message msg = new Message();
-                        msg.what = MainActivity.NO_DATA;
-                        handler.sendMessage(msg);
-                        return;
-                    }
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject temp = (JSONObject) jsonArray.get(i);
                         Pet pet = new Pet();
@@ -207,8 +204,14 @@ public class IssueActivity extends AppCompatActivity {
                         pet.setUrl2(resloverUrl(temp.getString("url2")));
                         pet.setUrl3(resloverUrl(temp.getString("url3")));
                         pet.setUrl4(resloverUrl(temp.getString("url4")));
-                        pet.setVedio(resloverUrl(temp.getString("video")));
+                        pet.setVideo(resloverUrl(temp.getString("video")));
                         petArrayList.add(pet);
+                    }
+                    if (petArrayList.size() == 0) {
+                        Message msg = new Message();
+                        msg.what = MainActivity.NO_DATA;
+                        handler.sendMessage(msg);
+                        return;
                     }
                     Message msg = new Message();
                     msg.what = ISSUE_UPDATE;

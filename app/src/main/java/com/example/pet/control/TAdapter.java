@@ -26,6 +26,7 @@ public class TAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     Context mContext;
     ArrayList<Pet> pets;
     int loadMoreFlag=1;
+    int flag;
 
     public TAdapter(Context context, ArrayList<Pet> list) {
         mContext = context;
@@ -33,6 +34,10 @@ public class TAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     }
     public void setArrayList( ArrayList<Pet> list){
         pets = list;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
     }
 
     @NonNull
@@ -163,6 +168,7 @@ public class TAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("pet",pet);
                     intent.putExtras(bundle);
+                    intent.putExtra("type",flag);
                     mContext.startActivity(intent);
 
                 }

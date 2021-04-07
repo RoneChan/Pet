@@ -51,7 +51,7 @@ import static android.app.Activity.RESULT_OK;
 
 
 public class HomeFragment extends Fragment {
-    static int CICTY_COOSE=100;
+    public static final int CICTY_COOSE=100;
     static final int UPDATE=001;
 
     public LocationClient mLocationClient = null;
@@ -131,13 +131,14 @@ public class HomeFragment extends Fragment {
 
         recyclerView=view.findViewById(R.id.recyclerView2);
         adapter=new TAdapter(view.getContext(),pets);
+        adapter.setFlag(1);
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
 
         int i=0;
         EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener=new EndlessRecyclerOnScrollListener() {
             @Override
             public void onLoadMore() {
-                //在这里写获取数据的逻辑
+                //在这里写获取更多数据的逻辑
                 //...
                 /*
                     Pet pet = new Pet();
@@ -182,9 +183,9 @@ public class HomeFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==RESULT_OK){
             if(requestCode==CICTY_COOSE){
-                city= data.getExtras().getString("city");
-                tv_city.setText(city);
-                pets.clear();
+                    city= data.getExtras().getString("city");
+                    tv_city.setText(city);
+                    pets.clear();
                 getPets(city,catalog);
             }
         }
@@ -200,19 +201,15 @@ public class HomeFragment extends Fragment {
     public void getPets(String city,String catalog) {
         Request request = null;
         try {
-            request = new Request.Builder().url(NetworkSettings.GEI_BY_CITY + "/?city=" + city+"&catalog="+catalog).put(
-                    RequestBody.create(
-                            mapper.writeValueAsString(city), mediaType
-                    )
-            ).build();
-        } catch (JsonProcessingException e) {
+            request = new Request.Builder().url(NetworkSettings.GEI_BY_CITY + "/?city=" + city+"&catalog="+catalog).get().build();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                String str = e.getMessage();
+             String str = e.getMessage();
 
             }
 
@@ -237,11 +234,12 @@ public class HomeFragment extends Fragment {
                         pet.setVaccine(temp.getInt("vaccine"));
                         pet.setSterillization(temp.getInt("sterillization"));
                         pet.setExpelling(temp.getInt("expelling"));
+                        pet.setPhone(temp.getString("phone"));
                         pet.setUrl1(resloverUrl(temp.getString("url1")));
                         pet.setUrl2(resloverUrl(temp.getString("url2")));
                         pet.setUrl3(resloverUrl(temp.getString("url3")));
                         pet.setUrl4(resloverUrl(temp.getString("url4")));
-                        pet.setVedio(resloverUrl(temp.getString("video")));
+                        pet.setVideo(resloverUrl(temp.getString("video")));
                         pets.add(pet);
                     }
                    // adapter.setArrayList(pets);

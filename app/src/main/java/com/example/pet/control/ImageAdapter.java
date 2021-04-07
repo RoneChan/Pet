@@ -1,46 +1,109 @@
 package com.example.pet.control;
 
+import android.content.Context;
+import android.net.Uri;
+import android.util.SparseBooleanArray;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pet.R;
 import com.example.pet.entity.ImageBean;
 import com.youth.banner.adapter.BannerAdapter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class ImageAdapter extends BannerAdapter<ImageBean, ImageAdapter.BannerViewHolder> {
-
-    public ImageAdapter(List<ImageBean> mDatas) {
-        //设置数据，也可以调用banner提供的方法,或者自己在adapter中实现
-        super(mDatas);
-    }
-
-    //创建ViewHolder，可以用viewType这个字段来区分不同的ViewHolder
-    @Override
-    public BannerViewHolder onCreateHolder(ViewGroup parent, int viewType) {
-        ImageView imageView = new ImageView(parent.getContext());
-        //注意，必须设置为match_parent，这个是viewpager2强制要求的
-        imageView.setLayoutParams(new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        return new BannerViewHolder(imageView);
-    }
-
-    @Override
-    public void onBindView(BannerViewHolder holder, ImageBean data, int position, int size) {
-        holder.imageView.setImageResource(data.getResourceId());
-    }
-
-    class BannerViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
-
-        public BannerViewHolder(@NonNull ImageView view) {
-            super(view);
-            this.imageView = view;
+public class ImageAdapter extends BaseAdapter {
+    ArrayList<String> imageList;
+    LayoutInflater mInflater;
+    Context mContext;
+    SparseBooleanArray mSparseBooleanArray;
+    int count=0;
+    Map<Integer,String> url=new HashMap<>();
+    public ArrayList<String> getChooseUri(){
+        ArrayList<String> chooseUri=new ArrayList<>();
+        for (Map.Entry<Integer, String> entry : url.entrySet()) {
+            chooseUri.add(entry.getValue());
         }
+       return chooseUri;
+    }
+
+    public ImageAdapter(Context context, ArrayList<String> imageList) {
+        // TODO Auto-generated constructor stub
+        mContext = context;
+        mInflater = LayoutInflater.from(mContext);
+        mSparseBooleanArray = new SparseBooleanArray();
+        this.imageList = imageList;
+    }
+
+    public ArrayList<String> getCheckedItems() {
+        ArrayList<String> mTempArry = new ArrayList<String>();
+
+        for (int i = 0; i < imageList.size(); i++) {
+            if (mSparseBooleanArray.get(i)) {
+                mTempArry.add(imageList.get(i));
+            }
+        }
+        return mTempArry;
+    }
+
+
+        @Override
+    public int getCount() {
+        return imageList.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return null;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        if(convertView == null) {
+            convertView = mInflater.inflate(R.layout.choose_pic_item, null);
+        }
+        CheckBox mCheckBox = (CheckBox) convertView.findViewById(R.id.checkBox1);
+        final ImageView imageView = (ImageView) convertView.findViewById(R.id.imageView1);
+
+        imageView.setImageURI(Uri.parse(imageList.get(position)));
+
+        mCheckBox.setTag(position);
+        mCheckBox.setChecked(mSparseBooleanArray.get(position));
+        mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+           @Override
+           public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+               if(count < 4 || (count==5 && isChecked==false)){
+                   if(isChecked){
+                       count++;
+                       url.put(position,imageList.get(position));
+                   }else{
+                       count--;
+                       url.remove(position);
+                   }
+                   mSparseBooleanArray.put((Integer) buttonView.getTag(), isChecked);
+               }else{
+                   Toast.makeText(mContext, "最多选择4张图片", Toast.LENGTH_SHORT).show();
+                   mCheckBox.setChecked(false);
+               }
+           }
+       });
+        return convertView;
     }
 }

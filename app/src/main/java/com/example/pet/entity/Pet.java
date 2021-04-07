@@ -14,15 +14,33 @@ public class Pet implements Serializable {
     int vaccine,sterillization,expelling;  //0代表未做，1代表做了
     //  vaccine疫苗，sterillization绝育，expelling驱虫
     String url1,url2,url3,url4;
-    String vedio;
-    int flagCollection;
+    String video;
+    String phone;
+    String condition;
+    String city;
 
-    public int getFlagCollection() {
-        return flagCollection;
+    public String getCity() {
+        return city;
     }
 
-    public void setFlagCollection(int flagCollection) {
-        this.flagCollection = flagCollection;
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCondition() {
+        return condition;
+    }
+
+    public void setCondition(String condition) {
+        this.condition = condition;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getId() {
@@ -73,12 +91,12 @@ public class Pet implements Serializable {
         this.url4 = url4;
     }
 
-    public String getVedio() {
-        return vedio;
+    public String getVideo() {
+        return video;
     }
 
-    public void setVedio(String vedio) {
-        this.vedio = vedio;
+    public void setVideo(String video) {
+        this.video = video;
     }
 
     public String getName() {

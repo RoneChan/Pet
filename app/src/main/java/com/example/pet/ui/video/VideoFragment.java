@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.pet.MainActivity.NO_DATA;
 import static com.example.pet.ui.home.HomeFragment.resloverUrl;
 
 public class VideoFragment extends Fragment {
@@ -75,7 +76,7 @@ public class VideoFragment extends Fragment {
                         tv_no_data.setVisibility(View.GONE);
                         adapter.notifyDataSetChanged();
                         break;
-                    case MainActivity.NO_DATA:
+                    case NO_DATA:
                         tv_no_data.setVisibility(View.VISIBLE);
                         break;
                 }
@@ -127,13 +128,19 @@ public class VideoFragment extends Fragment {
                         video.setVideo(resloverUrl(temp.getString("video")));
                         videoList.add(video);
                     }
+                    if(videoList.size()==0){
+                        Message msg = new Message();
+                        msg.what = GET_VIDEO;
+                        handler.sendMessage(msg);
+                    }
                     if (jsonArray.length()<10){
                         falg_all=true;
                     }
                     getVideo+=jsonArray.length();
                     Message msg = new Message();
-                    msg.what = GET_VIDEO;
+                    msg.what = NO_DATA;
                     handler.sendMessage(msg);
+                    return;
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

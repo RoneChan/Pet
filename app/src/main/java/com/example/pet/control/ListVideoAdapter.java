@@ -157,7 +157,7 @@ public class ListVideoAdapter extends RecyclerView.Adapter {
                     pet.setUrl2(resloverUrl(object.getString("url2")));
                     pet.setUrl3(resloverUrl(object.getString("url3")));
                     pet.setUrl4(resloverUrl(object.getString("url4")));
-                    pet.setVedio(resloverUrl(object.getString("video")));
+                    pet.setVideo(resloverUrl(object.getString("video")));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

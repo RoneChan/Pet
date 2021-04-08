@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -12,10 +13,14 @@ import androidx.fragment.app.Fragment;
 
 import com.example.pet.R;
 import com.example.pet.ui.issue.IssueActivity;
+import com.example.pet.ui.login.LoginActivity;
+
+import java.awt.font.TextAttribute;
 
 public class MineFragment extends Fragment {
     ConstraintLayout cl_issue;
     ConstraintLayout cl_collect;
+    TextView tv_userId;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -24,6 +29,16 @@ public class MineFragment extends Fragment {
         getActivity().getWindow().setStatusBarColor(getResources().getColor(R.color.colorThem)); //设置状态颜色
 
         cl_issue=view.findViewById(R.id.cl_issue);
+        tv_userId=view.findViewById(R.id.tv_mine_userid);
+        tv_userId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent =new Intent(getActivity(), LoginActivity.class);
+                startActivityForResult(intent,100);
+            }
+        });
+
+
         cl_issue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

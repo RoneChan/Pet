@@ -11,13 +11,22 @@ public class Pet implements Serializable {
     String name,story;
     String id;
     int age,sex; //男生0，女生1
+    String catalog;
     int vaccine,sterillization,expelling;  //0代表未做，1代表做了
     //  vaccine疫苗，sterillization绝育，expelling驱虫
-    String url1,url2,url3,url4;
-    String video;
+    String url1="",url2="",url3="",url4="";
+    String video="";
     String phone;
     String condition;
     String city;
+
+    public String getCatalog() {
+        return catalog;
+    }
+
+    public void setCatalog(String catalog) {
+        this.catalog = catalog;
+    }
 
     public String getCity() {
         return city;

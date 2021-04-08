@@ -64,6 +64,7 @@ public class HomeFragment extends Fragment {
     ConstraintLayout cl_city_choose;
     TextView tv_city;
     TextView tv_no_data;
+    int loadMoreFlag=1;
 
     private final OkHttpClient client = new OkHttpClient();
     private final ObjectMapper mapper = new ObjectMapper();
@@ -133,24 +134,15 @@ public class HomeFragment extends Fragment {
         adapter=new TAdapter(view.getContext(),pets);
         adapter.setFlag(1);
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
-
-        int i=0;
         EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener=new EndlessRecyclerOnScrollListener() {
             @Override
             public void onLoadMore() {
                 //在这里写获取更多数据的逻辑
-                //...
                 /*
-                    Pet pet = new Pet();
-                    pet.setName("333");
-                    ArrayList<Pet> newpet = new ArrayList<>();
-                    newpet.add(pet);
-                    newpet.add(pet);
-                    newpet.add(pet);
-
-
                     //获取数据后 传入adapter中上面写的更新数据的方法
                     adapter.updateData(newpet);  */
+                getPets(city,catalog);
+                System.out.println("需要加载数据");
 
             }
         };
@@ -161,6 +153,7 @@ public class HomeFragment extends Fragment {
 
         int lcp= layoutManager.findLastCompletelyVisibleItemPosition();
         if (lcp == layoutManager.getItemCount() - 2) {
+            /*
             // 倒数第2项
             int fcp= layoutManager.findFirstCompletelyVisibleItemPosition();
             View child = layoutManager.findViewByPosition(lcp);
@@ -170,7 +163,9 @@ public class HomeFragment extends Fragment {
             if (deltaY > 0 && fcp!= 0) {
                 recyclerView.smoothScrollBy(0, -deltaY);
             }
-        } else if (lcp== layoutManager.getItemCount() - 1) {
+
+             */
+        } else if (loadMoreFlag==1 && lcp== layoutManager.getItemCount() - 1) {
             // 最后一项完全显示, 触发操作, 执行加载更多操作
             if (endlessRecyclerOnScrollListener!= null) {
                 endlessRecyclerOnScrollListener.onLoadMore();
@@ -183,9 +178,9 @@ public class HomeFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==RESULT_OK){
             if(requestCode==CICTY_COOSE){
-                    city= data.getExtras().getString("city");
-                    tv_city.setText(city);
-                    pets.clear();
+                city= data.getExtras().getString("city");
+                tv_city.setText(city);
+                pets.clear();
                 getPets(city,catalog);
             }
         }
@@ -201,7 +196,7 @@ public class HomeFragment extends Fragment {
     public void getPets(String city,String catalog) {
         Request request = null;
         try {
-            request = new Request.Builder().url(NetworkSettings.GEI_BY_CITY + "/?city=" + city+"&catalog="+catalog).get().build();
+            request = new Request.Builder().url(NetworkSettings.GEI_BY_CITY + "/?city=" + city+"&catalog="+catalog+"&number="+pets.size()).get().build();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -210,7 +205,6 @@ public class HomeFragment extends Fragment {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
              String str = e.getMessage();
-
             }
 
             @Override
@@ -223,6 +217,11 @@ public class HomeFragment extends Fragment {
                         msg.what = MainActivity.NO_DATA;
                         handler.sendMessage(msg);
                     }
+                    if(jsonArray.length()<10){
+                        adapter.setloadMoreFlag(0);
+                        loadMoreFlag=0;
+                    }
+
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject temp = (JSONObject) jsonArray.get(i);
                         Pet pet = new Pet();

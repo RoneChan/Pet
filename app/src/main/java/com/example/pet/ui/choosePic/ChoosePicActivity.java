@@ -16,7 +16,7 @@ import com.example.pet.control.ImageAdapter;
 
 import java.util.ArrayList;
 
-import static com.example.pet.ui.message.AddFragment.GET_PICTURE;
+import static com.example.pet.ui.add.AddFragment.GET_PICTURE;
 
 //https://blog.csdn.net/danpincheng0204/article/details/106778988?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-6.control&dist_request_id=1329188.405.16177937906200843&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-6.control
 public class ChoosePicActivity extends AppCompatActivity {

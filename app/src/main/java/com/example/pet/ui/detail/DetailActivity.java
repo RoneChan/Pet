@@ -98,9 +98,9 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-        if(type==1 || type==2){//从home跳转过来
+        if(type==1 || type==3){//从home跳转过来
             btn_apply.setVisibility(View.VISIBLE);
-        }else if(type==3){
+        }else if(type==2){
             btn_apply.setVisibility(View.GONE);
         }
 

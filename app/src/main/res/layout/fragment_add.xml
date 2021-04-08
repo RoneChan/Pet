@@ -34,6 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
 
@@ -45,11 +46,23 @@
                 android:id="@+id/sp_add_sterillization"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginTop="1dp"
                 android:layout_marginEnd="16dp"
                 android:entries="@array/yesOrNot"
                 android:padding="9dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tv_add_sterillization" />
+                app:layout_constraintTop_toTopOf="@+id/tv_add_sterillization2" />
+
+            <Spinner
+                android:id="@+id/sp_add_catalog"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="16dp"
+                android:entries="@array/species"
+                android:padding="9dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_add_sterillization3" />
 
             <Spinner
                 android:id="@+id/sp_add_expelling"
@@ -104,9 +117,8 @@
                 android:id="@+id/tv_add_city"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:padding="9dp"
-                android:text="点击选择城市"
+                android:text="点击选择"
                 android:textColor="@color/colorGray"
                 android:textSize="17sp"
                 app:layout_constraintStart_toEndOf="@+id/tv_add_age2"
@@ -203,7 +215,19 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_add_vaccine" />
 
             <TextView
-                android:id="@+id/tv_add_sterillization"
+                android:id="@+id/tv_add_sterillization3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:padding="9dp"
+                android:text="种    类"
+                android:textColor="@color/colorCharacter"
+                android:textSize="17sp"
+                app:layout_constraintEnd_toStartOf="@+id/sp_add_catalog"
+                app:layout_constraintTop_toTopOf="@+id/tv_add_age2" />
+
+            <TextView
+                android:id="@+id/tv_add_sterillization2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"

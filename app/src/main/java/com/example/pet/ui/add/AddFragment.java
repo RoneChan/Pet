@@ -1,4 +1,4 @@
-package com.example.pet.ui.message;
+package com.example.pet.ui.add;
 
 import android.Manifest;
 import android.app.Activity;
@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,12 +33,15 @@ import com.example.pet.entity.Pet;
 import com.example.pet.tool.RealPathFromUriUtils;
 import com.example.pet.ui.choosePic.ChoosePicActivity;
 import com.example.pet.ui.home.CityChooseActivity;
+import com.example.pet.ui.home.HomeFragment;
 import com.google.android.material.textfield.TextInputEditText;
 
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -55,11 +60,12 @@ import static com.example.pet.ui.home.HomeFragment.CICTY_COOSE;
 
 public class AddFragment extends Fragment {
     public static final int GET_PICTURE=108;
+    public static final int ADD_SUCCESS=1012;
     ConstraintLayout constraintLayout;
     View view;
     EditText tiet_name,tiet_age;
     TextInputEditText tiet_story,tiet_condition;
-    Spinner sp_sex,sp_vaccine,sp_expelling,sp_sterillization;
+    Spinner sp_sex,sp_vaccine,sp_expelling,sp_sterillization,sp_catalog;
     TextView tv_city;
     Button btn_confirm;
     GridLayout gl_add_imgs;
@@ -82,9 +88,25 @@ public class AddFragment extends Fragment {
         sp_vaccine=view.findViewById(R.id.sp_add_vaccine);
         sp_expelling=view.findViewById(R.id.sp_add_expelling);
         sp_sterillization=view.findViewById(R.id.sp_add_sterillization);
+        sp_catalog=view.findViewById(R.id.sp_add_catalog);
         tv_city=view.findViewById(R.id.tv_add_city);
         btn_confirm=view.findViewById(R.id.btn_add_confirm);
         gl_add_imgs=view.findViewById(R.id.gl_add_imgs);
+
+        Handler handler =new Handler(){
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                if(msg.what==ADD_SUCCESS){
+                    Toast.makeText(getContext(),"发布成功",Toast.LENGTH_SHORT).show();
+                   // Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.layout.fragment_home);
+                    getActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.nav_host_fragment, new HomeFragment(),null)
+                            .commit();
+
+                }
+            }
+        };
 
         tv_city.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,6 +161,7 @@ public class AddFragment extends Fragment {
                 }else{
                     pet.setExpelling(0);
                 }
+                pet.setCatalog((String) sp_catalog.getSelectedItem());
                 String sterillization = (String)sp_sterillization.getSelectedItem();
                 if(sterillization.equals("是")){
                     pet.setSterillization(1);
@@ -167,7 +190,6 @@ public class AddFragment extends Fragment {
                         uploadImage(file);
                     }
                 }
-                pet.setVideo(video);
             }
         });
 
@@ -223,8 +245,6 @@ public class AddFragment extends Fragment {
                 ImageView imageView=new ImageView(getContext());
                 imageView.setImageURI(Uri.parse(path));
                 gl_add_imgs.addView(imageView,0,params);
-                //uploadImage(file);
-
             }
             if(requestCode==CICTY_COOSE){
                 String city= data.getExtras().getString("city");
@@ -272,6 +292,10 @@ public class AddFragment extends Fragment {
 
     public void uploadPet(Pet pet){
         FormBody.Builder builder = new FormBody.Builder();
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        String date = sdf.format(d);
+        pet.setId(date);
         builder.add("id",pet.getId());
         builder.add("name",pet.getName());
         builder.add("story",pet.getStory());
@@ -281,6 +305,7 @@ public class AddFragment extends Fragment {
         builder.add("sterillization",pet.getSterillization()+"");
         builder.add("expelling",pet.getExpelling()+"");
         builder.add("condition",pet.getCondition());
+        builder.add("catalog",pet.getCatalog());
         builder.add("city",pet.getCity());
         builder.add("url1",pet.getUrl1());
         builder.add("url2",pet.getUrl2());
@@ -288,6 +313,7 @@ public class AddFragment extends Fragment {
         builder.add("url4",pet.getUrl4());
         builder.add("video",pet.getVideo());
         builder.add("phone",pet.getPhone());
+
         OkHttpClient httpClient = new OkHttpClient();
         FormBody formBody=builder.build();
         Request request=new Request.Builder().url(POST_PET).post(formBody).build();
@@ -302,7 +328,9 @@ public class AddFragment extends Fragment {
             public void onResponse(Call call, Response response) throws IOException {
                 //在这里根据返回内容执行具体的操作
                 final String resdata = response.body().string();
-                System.out.println(resdata);
+                if(response.code()==200){
+
+                }
 
             }
         });
@@ -351,6 +379,9 @@ public class AddFragment extends Fragment {
                         break;
                 }
                 System.out.println(resdata);
+                if(unUploadPicNum<=0){
+                    uploadPet(pet);
+                }
             }
         });
     }

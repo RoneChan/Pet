@@ -11,6 +11,7 @@
         android:layout_height="1dp"
         android:background="@color/colorGray"
         app:layout_constraintBottom_toBottomOf="@+id/linearLayout3"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_home_image" />
 
     <LinearLayout
@@ -44,7 +45,7 @@
                 android:id="@+id/tv_home_city"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="16dp"
                 android:text="珠海"
                 android:textColor="#000000"
                 android:textSize="17sp"
@@ -71,28 +72,15 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_pet" />
 
-            <TextView
-                android:id="@+id/tv_home_pet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:textSize="17sp"
-                android:textColor="@color/colorCharacter"
-                android:text="猫猫"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageView6"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <Spinner
                 android:id="@+id/spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="8dp"
                 android:entries="@array/species"
                 android:padding="5dp"
-                app:layout_constraintStart_toEndOf="@+id/tv_home_pet"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintBottom_toBottomOf="@+id/imageView6"
+                app:layout_constraintStart_toEndOf="@+id/imageView6"
+                app:layout_constraintTop_toTopOf="@+id/imageView6" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>

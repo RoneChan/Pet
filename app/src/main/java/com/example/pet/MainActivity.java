@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimary));
         Intent intent=getIntent();
         //userId = intent.getStringExtra("userId");
         BottomNavigationView navView = findViewById(R.id.nav_view);

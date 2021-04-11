@@ -282,7 +282,7 @@
                 android:layout_marginTop="16dp"
                 app:columnCount="3"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
+                app:layout_constraintTop_toBottomOf="@+id/tv_add_video">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl_add_choose_img"
@@ -321,6 +321,32 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/gl_add_imgs" />
+
+            <TextView
+                android:id="@+id/tv_add_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:padding="9dp"
+                android:text="视频："
+                android:textColor="@color/colorCharacter"
+                android:textSize="17sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout2" />
+
+            <TextView
+                android:id="@+id/tv_add_video_select"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:padding="9dp"
+                android:text="点击选择视频"
+                android:textColor="@color/colorGray"
+                android:textSize="17sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tv_add_video"
+                app:layout_constraintTop_toTopOf="@+id/tv_add_video" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

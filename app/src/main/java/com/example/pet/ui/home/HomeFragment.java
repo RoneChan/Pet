@@ -8,7 +8,9 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +66,7 @@ public class HomeFragment extends Fragment {
     ConstraintLayout cl_city_choose;
     TextView tv_city;
     TextView tv_no_data;
+    Spinner sp_catalog;
     int loadMoreFlag=1;
 
     private final OkHttpClient client = new OkHttpClient();
@@ -80,6 +83,35 @@ public class HomeFragment extends Fragment {
         tv_no_data=view.findViewById(R.id.tv_home_no_data);
         tv_city=view.findViewById(R.id.tv_home_city);
         cl_city_choose=view.findViewById(R.id.cl_home_city);
+        sp_catalog=view.findViewById(R.id.sp_home_catalog);
+
+        sp_catalog.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String newCatalog="";
+                switch (position){
+                    case 0:
+                        newCatalog="狗狗";
+                        break;
+                    case 1:
+                        newCatalog="猫猫";
+                        break;
+                    case 2:
+                        newCatalog="其他";
+                        break;
+                }
+                if(!newCatalog.equals(catalog)){
+                    catalog=newCatalog;
+                    pets.clear();
+                    getPets(city,catalog);
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         cl_city_choose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,13 +130,13 @@ public class HomeFragment extends Fragment {
                         break;
                     case MainActivity.NO_DATA:
                         tv_no_data.setVisibility(View.VISIBLE);
+                        adapter.setloadMoreFlag(0);
                         break;
                 }
             }
         };
 
-        getPets(city,"猫猫");
-
+        getPets(city,catalog);
 
         //初始化LocationClient类
         mLocationClient = new LocationClient(getContext());
@@ -137,10 +169,7 @@ public class HomeFragment extends Fragment {
         EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener=new EndlessRecyclerOnScrollListener() {
             @Override
             public void onLoadMore() {
-                //在这里写获取更多数据的逻辑
-                /*
-                    //获取数据后 传入adapter中上面写的更新数据的方法
-                    adapter.updateData(newpet);  */
+                //获取更多数据
                 getPets(city,catalog);
                 System.out.println("需要加载数据");
 
@@ -216,8 +245,8 @@ public class HomeFragment extends Fragment {
                         Message msg = new Message();
                         msg.what = MainActivity.NO_DATA;
                         handler.sendMessage(msg);
-                    }
-                    if(jsonArray.length()<10){
+                        return;
+                    }else if(jsonArray.length()<10){
                         adapter.setloadMoreFlag(0);
                         loadMoreFlag=0;
                     }

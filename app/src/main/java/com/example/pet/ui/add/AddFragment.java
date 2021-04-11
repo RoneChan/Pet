@@ -26,6 +26,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.gridlayout.widget.GridLayout;
+import androidx.navigation.Navigation;
 
 import com.example.pet.MainActivity;
 import com.example.pet.R;
@@ -61,6 +62,8 @@ import static com.example.pet.ui.home.HomeFragment.CICTY_COOSE;
 public class AddFragment extends Fragment {
     public static final int GET_PICTURE=108;
     public static final int ADD_SUCCESS=1012;
+    public static final int REQUEST_CODE_IMAGE = 101;
+    public static final int REQUEST_CODE_VIDEO = 102;
     ConstraintLayout constraintLayout;
     View view;
     EditText tiet_name,tiet_age;
@@ -72,9 +75,10 @@ public class AddFragment extends Fragment {
     Pet pet= new Pet();
     String url1,url2,url3,url4,video;
     int unUploadPicNum,neededUpPicNum;
+    Handler handler;
+    TextView tv_video;
+    int uploadNum=1;
 
-
-    static int REQUEST_CODE_IMAGE = 101;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              final ViewGroup container, Bundle savedInstanceState) {
@@ -93,17 +97,13 @@ public class AddFragment extends Fragment {
         btn_confirm=view.findViewById(R.id.btn_add_confirm);
         gl_add_imgs=view.findViewById(R.id.gl_add_imgs);
 
-        Handler handler =new Handler(){
+        handler =new Handler(){
             @Override
             public void handleMessage(@NonNull Message msg) {
                 if(msg.what==ADD_SUCCESS){
                     Toast.makeText(getContext(),"发布成功",Toast.LENGTH_SHORT).show();
                    // Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(R.layout.fragment_home);
-                    getActivity().getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.nav_host_fragment, new HomeFragment(),null)
-                            .commit();
-
+                    Navigation.findNavController(view).navigate(R.id.action_add_to_home);
                 }
             }
         };
@@ -170,6 +170,7 @@ public class AddFragment extends Fragment {
                 }
                 pet.setCity(tv_city.getText().toString());
                 pet.setPhone(MainActivity.userId);
+                uploadVideo(new File(video));
                 if(url1==null){
                     Toast.makeText(getContext(),"请选择图片",Toast.LENGTH_SHORT).show();
                 }else{
@@ -193,6 +194,15 @@ public class AddFragment extends Fragment {
             }
         });
 
+        tv_video=view.findViewById(R.id.tv_add_video_select);
+        tv_video.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //权限已经被授予，在这里直接写要执行的相应方法即可
+                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, REQUEST_CODE_VIDEO);
+            }
+        });
 
         constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -231,7 +241,13 @@ public class AddFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_CODE_IMAGE) {
+            if (requestCode == REQUEST_CODE_VIDEO) { //视频选择返回
+                Uri uri = data.getData();
+                video = RealPathFromUriUtils.getRealPathFromUri(getContext(), uri);
+                //File file = new File(path);
+                tv_video.setText("已选择");
+                uploadNum++;
+                /*
                 Uri uri = data.getData();
                 String path = RealPathFromUriUtils.getRealPathFromUri(getContext(), uri);
                 File file = new File(path);
@@ -245,13 +261,15 @@ public class AddFragment extends Fragment {
                 ImageView imageView=new ImageView(getContext());
                 imageView.setImageURI(Uri.parse(path));
                 gl_add_imgs.addView(imageView,0,params);
+
+                 */
             }
-            if(requestCode==CICTY_COOSE){
+            if(requestCode==CICTY_COOSE){  //城市选择返回
                 String city= data.getExtras().getString("city");
                 tv_city.setText(city);
                 tv_city.setTextColor(getResources().getColor(R.color.colorCharacter));
             }
-        }if(resultCode==GET_PICTURE){
+        }if(resultCode==GET_PICTURE){  //图片选择返回
             ArrayList<String> uris=new ArrayList<>();
             url1 = data.getStringExtra("url1");
             uris.add(url1);
@@ -269,7 +287,7 @@ public class AddFragment extends Fragment {
             }
             unUploadPicNum = uris.size();
             neededUpPicNum=uris.size();
-            for(int i=0;i<uris.size();i++){
+            for(int i=0;i<uris.size();i++){  //显示选择的图片
                 Uri uri = Uri.parse(uris.get(i));
                 //String path = RealPathFromUriUtils.getRealPathFromUri(getContext(), uri);
                 //File file = new File(path);
@@ -290,6 +308,7 @@ public class AddFragment extends Fragment {
         }
     }
 
+    //上传发布的全部数据
     public void uploadPet(Pet pet){
         FormBody.Builder builder = new FormBody.Builder();
         Date d = new Date();
@@ -328,14 +347,17 @@ public class AddFragment extends Fragment {
             public void onResponse(Call call, Response response) throws IOException {
                 //在这里根据返回内容执行具体的操作
                 final String resdata = response.body().string();
-                if(response.code()==200){
-
+                if(resdata.equals("true")){
+                    Message msg =new Message();
+                    msg.what=ADD_SUCCESS;
+                    handler.sendMessage(msg);
                 }
 
             }
         });
     }
 
+    //上传图片
     public void uploadImage(File file) {
         OkHttpClient httpClient = new OkHttpClient();
         MediaType mediaType = MediaType.parse("application/octet-stream");//设置类型，类型为八位字节流
@@ -379,7 +401,44 @@ public class AddFragment extends Fragment {
                         break;
                 }
                 System.out.println(resdata);
-                if(unUploadPicNum<=0){
+                if(unUploadPicNum<=0){//uploadNum==0：视频和图片都上传完成
+                    uploadNum--;
+                    if(uploadNum==0){
+                        uploadPet(pet);
+                    }
+                }
+            }
+        });
+    }
+
+
+    //上传视频
+    public void uploadVideo(File file) {
+        OkHttpClient httpClient = new OkHttpClient();
+        MediaType mediaType = MediaType.parse("application/octet-stream");//设置类型，类型为八位字节流
+        RequestBody requestBody = RequestBody.create(mediaType, file);//把文件与类型放入请求体
+
+        MultipartBody multipartBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("file", file.getName(), requestBody)//文件名
+                .build();
+        Request request = new Request.Builder()
+                .url(UPLOAD_IMAGE)
+                .post(multipartBody)
+                .build();
+        Call call = httpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.out.println(e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                //在这里根据返回内容执行具体的操作
+                final String resdata = response.body().string();
+                uploadNum--;
+                if(uploadNum==0){ //uploadNum==0：视频和图片都上传完成
                     uploadPet(pet);
                 }
             }

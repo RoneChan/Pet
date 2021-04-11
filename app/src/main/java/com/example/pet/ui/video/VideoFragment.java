@@ -93,7 +93,6 @@ public class VideoFragment extends Fragment {
         if(falg_all==true){
             return;
         }
-
         Request request = null;
         OkHttpClient client = new OkHttpClient();
         ObjectMapper mapper = new ObjectMapper();
@@ -130,7 +129,7 @@ public class VideoFragment extends Fragment {
                     }
                     if(videoList.size()==0){
                         Message msg = new Message();
-                        msg.what = GET_VIDEO;
+                        msg.what = NO_DATA;
                         handler.sendMessage(msg);
                     }
                     if (jsonArray.length()<10){
@@ -138,7 +137,7 @@ public class VideoFragment extends Fragment {
                     }
                     getVideo+=jsonArray.length();
                     Message msg = new Message();
-                    msg.what = NO_DATA;
+                    msg.what = GET_VIDEO;
                     handler.sendMessage(msg);
                     return;
                 } catch (JSONException e) {

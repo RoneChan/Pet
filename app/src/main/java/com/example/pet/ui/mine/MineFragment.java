@@ -6,11 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import com.example.pet.MainActivity;
 import com.example.pet.R;
 import com.example.pet.ui.issue.IssueActivity;
 import com.example.pet.ui.login.LoginActivity;
@@ -33,18 +35,27 @@ public class MineFragment extends Fragment {
         tv_userId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent =new Intent(getActivity(), LoginActivity.class);
-                startActivityForResult(intent,100);
+                if(MainActivity.userId.equals("")) {
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivityForResult(intent, 100);
+                }
             }
         });
 
+        if(!MainActivity.userId.equals("")){
+            tv_userId.setText(MainActivity.userId);
+        }
 
         cl_issue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(),IssueActivity.class);
-                intent.putExtra("titleFlag",1);
-                startActivity(intent);
+                if(MainActivity.userId.equals("")){
+                    Toast.makeText(getContext(),"请登录",Toast.LENGTH_LONG).show();
+                }else {
+                    Intent intent = new Intent(getContext(), IssueActivity.class);
+                    intent.putExtra("titleFlag", 1);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -52,9 +63,13 @@ public class MineFragment extends Fragment {
         cl_collect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(),IssueActivity.class);
-                intent.putExtra("titleFlag",0);
-                startActivity(intent);
+                if(MainActivity.userId.equals("")){
+                    Toast.makeText(getContext(),"请登录",Toast.LENGTH_LONG).show();
+                }else {
+                    Intent intent = new Intent(getContext(), IssueActivity.class);
+                    intent.putExtra("titleFlag", 0);
+                    startActivity(intent);
+                }
             }
         });
 

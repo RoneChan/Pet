@@ -24,7 +24,9 @@
                 android:layout_height="300dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent" >
+
+            </com.youth.banner.Banner>
 
             <TextView
                 android:id="@+id/tv_detail_title"
@@ -340,11 +342,10 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/btn_detail_apply"
+            android:id="@+id/btn_test"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="52dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="32dp"
             android:background="@drawable/confrim_button_shape"
             android:text="申请领养"
             android:textColor="#FFFFFF"

@@ -12,13 +12,14 @@
         android:title="@string/title_dashboard" />
 
     <item
+        android:id="@+id/navigation_video"
+        android:icon="@drawable/ic_video"
+        android:title="@string/title_video" />
+
+    <item
         android:id="@+id/navigation_notifications"
         android:icon="@drawable/ic_user"
         android:title="@string/title_notifications" />
 
-    <item
-        android:id="@+id/navigation_video"
-        android:icon="@drawable/ic_video"
-        android:title="@string/title_video" />
 
 </menu>

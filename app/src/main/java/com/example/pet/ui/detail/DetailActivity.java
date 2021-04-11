@@ -27,6 +27,7 @@ import com.example.pet.entity.ImageBean;
 import com.example.pet.entity.MyImageBean;
 import com.example.pet.entity.Pet;
 import com.example.pet.jdbc.NetworkSettings;
+import com.example.pet.ui.login.LoginActivity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.youth.banner.Banner;
@@ -83,18 +84,19 @@ public class DetailActivity extends AppCompatActivity {
         tv_sterilization=findViewById(R.id.tv_detail_sterilization);
         tv_vaccine=findViewById(R.id.tv_detail_vaccine);
         tv_story=findViewById(R.id.tv_detail_story);
-        btn_apply=findViewById(R.id.btn_detail_apply);
 
         Intent intent=getIntent();
         pet=(Pet) intent.getSerializableExtra("pet");
         int type=intent.getIntExtra("type",-1);
 
+        btn_apply = findViewById(R.id.btn_test);
         btn_apply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+pet.getPhone()));
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+                Toast.makeText(DetailActivity.this, "sdfsdf",Toast.LENGTH_SHORT);
             }
         });
 
@@ -153,7 +155,9 @@ public class DetailActivity extends AppCompatActivity {
             tv_vaccine.setText("已免疫");
         }
         tv_story.setText(story);
-        QueryCollect(pet.getId());
+        if(!MainActivity.userId.equals("")) {
+            QueryCollect(pet.getId());
+        }
         JzvdStd jzvdStd = (JzvdStd) findViewById(R.id.jz_video_player);
 
         String s= pet.getVideo();
@@ -164,8 +168,6 @@ public class DetailActivity extends AppCompatActivity {
         }else{
             jzvdStd.setVisibility(View.GONE);
         }
-
-
 
         ArrayList<ImageBean> imageBeans=new ArrayList<>();
         imageBeans.add(new ImageBean(R.drawable.test1));
@@ -183,13 +185,11 @@ public class DetailActivity extends AppCompatActivity {
 
         cl_back_home=findViewById(R.id.cl_detail_backhome);
         cl_collection=findViewById(R.id.cl_detail_collection);
-        btn_apply=findViewById(R.id.btn_detail_apply);
-
         cl_back_home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DetailActivity.this, MainActivity.class);
-                intent.putExtra("fragment",0);
+                intent.putExtra("fragment", 0);
                 startActivity(intent);
             }
         });
@@ -210,29 +210,23 @@ public class DetailActivity extends AppCompatActivity {
         cl_collection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(flag_collection==0){
-                    //收藏逻辑，更新数据库
-                    //未收藏->收藏
-                    ChangeCollect(1);
-                    flag_collection=1;
-                    //改变图标
-                    iv_collection.setImageResource(R.drawable.ic_collect_selected);
-                }else {
-                    //收藏逻辑，更新数据库
-                    //未实现
-                    flag_collection=0;
-                    //收藏->未收藏
-                    ChangeCollect(0);
-                    //改变图标
-                    iv_collection.setImageResource(R.drawable.ic_collect);
+                if (MainActivity.userId.equals("")) {
+                    Toast.makeText(DetailActivity.this, "请登录", Toast.LENGTH_LONG).show();
+                } else {
+                    if (flag_collection == 0) {
+                        //未收藏->收藏
+                        ChangeCollect(1);
+                        flag_collection = 1;
+                        //改变图标
+                        iv_collection.setImageResource(R.drawable.ic_collect_selected);
+                    } else {
+                        flag_collection = 0;
+                        //收藏->未收藏
+                        ChangeCollect(0);
+                        //改变图标
+                        iv_collection.setImageResource(R.drawable.ic_collect);
+                    }
                 }
-            }
-        });
-
-        btn_apply.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //未实现
             }
         });
 
@@ -256,7 +250,7 @@ public class DetailActivity extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                String str = e.getMessage();
+                Log.e("详情页面Error：",e.getMessage());
             }
 
             @Override
@@ -306,7 +300,6 @@ public class DetailActivity extends AppCompatActivity {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-
                 }
             }
         });

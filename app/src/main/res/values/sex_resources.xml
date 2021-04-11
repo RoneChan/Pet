@@ -11,8 +11,8 @@
     </string-array>
 
     <string-array name="species">
-        <item>猫猫</item>
         <item>狗狗</item>
+        <item>猫猫</item>
         <item>其他</item>
     </string-array>
 </resources>

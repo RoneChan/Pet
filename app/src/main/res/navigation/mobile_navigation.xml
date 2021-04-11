@@ -15,7 +15,12 @@
         android:id="@+id/navigation_dashboard"
         android:name="com.example.pet.ui.add.AddFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_add" />
+        tools:layout="@layout/fragment_add">
+        <action
+            android:id="@+id/action_add_to_home"
+            app:destination="@id/navigation_home"
+            />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_video"

@@ -198,15 +198,6 @@ public class TAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     @Override
     public int getItemCount() {
         return pets.size()+1;
-        /*
-        if(loadMoreFlag==1){
-            return pets.size()+1;
-        }else{
-            return pets.size();
-        }
-
-         */
-
     }
 
     @Override

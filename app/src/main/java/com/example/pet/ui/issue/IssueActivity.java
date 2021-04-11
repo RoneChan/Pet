@@ -76,6 +76,7 @@ public class IssueActivity extends AppCompatActivity {
         title = findViewById(R.id.tx_issue_title);
         int titleFlag = getIntent().getIntExtra("titleFlag", -1);
         tAdapter = new TAdapter(this, petArrayList);
+        tAdapter.setloadMoreFlag(0);
         if (titleFlag == 1) {
             title.setText("我发布的");
             tAdapter.setFlag(2);

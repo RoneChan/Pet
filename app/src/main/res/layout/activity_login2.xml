@@ -47,6 +47,7 @@
         android:background="@drawable/confrim_button_shape"
         android:enabled="true"
         android:text="登录/注册"
+        android:textSize="18dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

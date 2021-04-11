@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:scrollbarSize="35sp"
+            android:scrollbarSize="18dp"
             android:text="点击登录/注册"
             android:padding="20sp"
             android:textColor="@color/colorCharacter"
@@ -31,7 +31,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"
             android:gravity="center_horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_mine_userid">
 

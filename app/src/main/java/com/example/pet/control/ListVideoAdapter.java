@@ -16,6 +16,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.pet.R;
 import com.example.pet.entity.Pet;
 import com.example.pet.entity.Video;
@@ -83,6 +84,11 @@ public class ListVideoAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Video video = list.get(position);
         ((VideoViewHolder) holder).mp_video.setUp(video.getVideo(), video.getName());
+        Glide.with(mContext).setDefaultRequestOptions(
+                new RequestOptions()
+                        .frame(1000000)
+                        .centerCrop()
+        ).load(video.getVideo()).into(((VideoViewHolder) holder).mp_video.posterImageView);
         ((VideoViewHolder) holder).tv_name.setText(video.getName());
         ((VideoViewHolder) holder).tv_age.setText(video.getAge() + "岁");
         Glide.with(mContext).load(video.getUrl()).into(((VideoViewHolder) holder).iv_pic);

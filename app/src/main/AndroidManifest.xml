@@ -20,7 +20,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/NoTitle"
+        android:networkSecurityConfig="@xml/nextwork_ssecurity_config"
         tools:ignore="HardcodedDebugMode">
+        <service android:name="com.baidu.location.f" android:enabled="true" android:process=":remote"> </service>
         <activity android:name=".ui.login.LoginActivity"></activity>
         <activity android:name=".ui.choosePic.ChoosePicActivity" />
         <activity

@@ -1,12 +1,16 @@
 package com.example.pet.control;
 
+import android.os.Message;
 import android.util.Log;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 
+import static com.example.pet.ui.home.HomeFragment.CICTY_COOSE;
+import static com.example.pet.ui.home.HomeFragment.homeHandler;
+
 public class MyLocationListener  extends BDAbstractLocationListener {
-    private String city,province,country;
+    private String city;
 
     @Override
     public void onReceiveLocation(BDLocation location){
@@ -24,17 +28,17 @@ public class MyLocationListener  extends BDAbstractLocationListener {
         String town = location.getTown();    //获取乡镇信息
 
  */
-        //经纬度
-        double lati = location.getLatitude();
-        double longa = location.getLongitude();
-        String str = location.getCity();
-        //打印出当前位置
-        Log.i("TAG", "location.getAddrStr()=" + location.getAddrStr());
-        //打印出当前城市
-        Log.i("TAG", "location.getCity()=" + location.getCity());
+        city = location.getCity();
+        city = city.substring(0,city.length()-1);
         //返回码
         int i = location.getLocType();
+        Log.i("tag","city="+city);
+        Message message =new Message();
+        message.what=CICTY_COOSE;
+        homeHandler.sendMessage(message);
+    }
 
-        Log.i("tag","city="+country);
+    public String getCity() {
+        return city;
     }
 }

@@ -119,6 +119,10 @@ public class AddFragment extends Fragment {
         btn_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(MainActivity.userId.equals("")){
+                    Toast.makeText(getContext(),"请先登录",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 String name = tiet_name.getText().toString();
                 if(name ==null ){
                     Toast.makeText(getContext(),"请输入名字",Toast.LENGTH_SHORT).show();
@@ -170,7 +174,9 @@ public class AddFragment extends Fragment {
                 }
                 pet.setCity(tv_city.getText().toString());
                 pet.setPhone(MainActivity.userId);
-                uploadVideo(new File(video));
+                if(video!=null) {
+                    uploadVideo(new File(video));
+                }
                 if(url1==null){
                     Toast.makeText(getContext(),"请选择图片",Toast.LENGTH_SHORT).show();
                 }else{
@@ -437,6 +443,7 @@ public class AddFragment extends Fragment {
             public void onResponse(Call call, Response response) throws IOException {
                 //在这里根据返回内容执行具体的操作
                 final String resdata = response.body().string();
+                pet.setVideo(resdata);
                 uploadNum--;
                 if(uploadNum==0){ //uploadNum==0：视频和图片都上传完成
                     uploadPet(pet);

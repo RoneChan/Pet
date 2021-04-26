@@ -79,12 +79,12 @@ public class IssueActivity extends AppCompatActivity {
         tAdapter.setloadMoreFlag(0);
         if (titleFlag == 1) {
             title.setText("我发布的");
-            tAdapter.setFlag(2);
-            LoadPet(titleFlag);
+            tAdapter.setFlag(2);  //通过向Adapter传输参数填充不同的item布局
+            LoadPet(titleFlag);  //通过参数查询发布信息的数据
         } else if (titleFlag == 0) {
             title.setText("我收藏的");
-            tAdapter.setFlag(3);
-            LoadPet(titleFlag);
+            tAdapter.setFlag(3); //通过向Adapter传输参数填充不同的item布局
+            LoadPet(titleFlag);  //通过参数查询收藏信息的数据
         }
         getWindow().setStatusBarColor(getResources().getColor(R.color.colorThem)); //设置状态颜色
 

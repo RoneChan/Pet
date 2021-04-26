@@ -46,19 +46,33 @@ import static com.example.pet.MainActivity.NO_DATA;
 import static com.example.pet.ui.home.HomeFragment.resloverUrl;
 
 public class VideoFragment extends Fragment {
-    static final int GET_VIDEO=003;
+    static final int GET_VIDEO = 003;
     RecyclerView recyclerView;
     TextView tv_no_data;
-    int firstVisibleItem,lastVisibleItem;
+    int firstVisibleItem, lastVisibleItem;
     private List<String> urlList;
-    List<Video> videoList=new ArrayList<>();
+    List<Video> videoList = new ArrayList<>();
     ListVideoAdapter adapter;
-    int getVideo=0; //目前已经加载的视频
-    boolean falg_all=false;  //是否已经浏览完全部的视频
+    int getVideo = 0; //目前已经加载的视频
+    boolean falg_all = false;  //是否已经浏览完全部的视频
     Handler handler;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onPause() {  //切换Fragment，将视频暂停
+        super.onPause();
+        for (int i = 0; i <= lastVisibleItem; i++) {
+            if (recyclerView == null || recyclerView.getChildAt(i) == null) {
+                return;
+            }
+            JzvdStd videoView = recyclerView.getChildAt(i).findViewById(R.id.jz_video_player);
+            //释放资源
+            videoView.releaseAllVideos();
+        }
     }
 
     @Override
@@ -163,7 +177,7 @@ public class VideoFragment extends Fragment {
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 switch (newState) {
                     case RecyclerView.SCROLL_STATE_IDLE://停止滚动
-                        /**在这里执行，视频的自动播放与停止*/
+                        //这里执行，视频的自动播放与停止
                         autoPlayVideo(recyclerView);
                         LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
                         int lastItemPosition = manager.findLastCompletelyVisibleItemPosition();
@@ -171,7 +185,6 @@ public class VideoFragment extends Fragment {
                         // 判断是否滑动到了最后一个item，并且是向上滑动
                         if (lastItemPosition == (itemCount - 1) && isSlidingUpward) {
                             //加载更多
-                            //为实现**************
                             LoadVideo();
                         }
                         break;
@@ -203,6 +216,7 @@ public class VideoFragment extends Fragment {
             }
             if (videoView != null) {
                 if (videoView.state == JzvdStd.STATE_PAUSE || videoView.state ==  JzvdStd.STATE_NORMAL) {
+                    //播放第一个显示完整的视频
                     videoView.startVideo();
                 }
             }
@@ -220,11 +234,13 @@ public class VideoFragment extends Fragment {
                 //获取视频的高度
                 int videoHeight = videoView.getHeight();
                 if (rect.top <= 100 && rect.bottom >= videoHeight) {
+                    //若是显示完全的第一个视频
                     if (videoView.state == JzvdStd.STATE_PAUSE || videoView.state ==  JzvdStd.STATE_NORMAL) {
                         videoView.startVideo();
                     }
                     return;
                 }
+                //释放资源
                 videoView.releaseAllVideos();
             } else {
                 videoView.releaseAllVideos();

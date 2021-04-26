@@ -17,9 +17,11 @@ import com.zaaach.citypicker.model.LocatedCity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class CityChooseActivity extends AppCompatActivity {
-
+    LocatedCity city;
+    String c;
     private List<HotCity> hotCities;
 
     @Override
@@ -34,15 +36,15 @@ public class CityChooseActivity extends AppCompatActivity {
         hotCities.add(new HotCity("深圳", "广东", "101280601"));
         hotCities.add(new HotCity("杭州", "浙江", "101210101"));
 
+
         CityPicker.from(CityChooseActivity.this)
-                .enableAnimation(true)
+                .enableAnimation(true) //启用动画效果，默认无
                 //.setAnimationStyle(anim)
-                .setLocatedCity(null)
+                .setLocatedCity(null) //APP自身已定位的城市
                 .setHotCities(hotCities)
                 .setOnPickListener(new OnPickListener() {
                     @Override
                     public void onPick(int position, City data) {
-
                         String str1=data.getName();
                         Intent intent = new Intent();
                         //把需要返回的数据存放在intent
@@ -60,11 +62,11 @@ public class CityChooseActivity extends AppCompatActivity {
 
                     @Override
                     public void onLocate() {
-                        //开始定位，这里模拟一下定位
+                        //开始定位
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                CityPicker.from(CityChooseActivity.this).locateComplete(new LocatedCity("深圳", "广东", "101280601"), LocateState.SUCCESS);
+                                CityPicker.from(CityChooseActivity.this).locateComplete(new LocatedCity("珠海", "广东", "101280601"), LocateState.SUCCESS);
                             }
                         }, 3000);
                     }

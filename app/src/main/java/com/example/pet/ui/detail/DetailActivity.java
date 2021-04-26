@@ -16,12 +16,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.TransformationUtils;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.pet.MainActivity;
 import com.example.pet.R;
 
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Toast;
 
+import com.example.pet.control.ListVideoAdapter;
 import com.example.pet.control.MyImageAdapter;
 import com.example.pet.entity.ImageBean;
 import com.example.pet.entity.MyImageBean;
@@ -66,7 +69,7 @@ public class DetailActivity extends AppCompatActivity {
     Banner banner;
     Pet pet;
     TextView tv_title,tv_name,tv_sex,tv_age,tv_expelling,tv_sterilization,tv_vaccine;
-    TextView tv_story;
+    TextView tv_story,tv_condition;
     Handler handler;
     final private int COLLECTED=006;
 
@@ -84,6 +87,7 @@ public class DetailActivity extends AppCompatActivity {
         tv_sterilization=findViewById(R.id.tv_detail_sterilization);
         tv_vaccine=findViewById(R.id.tv_detail_vaccine);
         tv_story=findViewById(R.id.tv_detail_story);
+        tv_condition=findViewById(R.id.tv_detail_condition);
 
         Intent intent=getIntent();
         pet=(Pet) intent.getSerializableExtra("pet");
@@ -96,7 +100,7 @@ public class DetailActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+pet.getPhone()));
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-                Toast.makeText(DetailActivity.this, "sdfsdf",Toast.LENGTH_SHORT);
+                //Toast.makeText(DetailActivity.this, "sdfsdf",Toast.LENGTH_SHORT);
             }
         });
 
@@ -108,6 +112,7 @@ public class DetailActivity extends AppCompatActivity {
 
         String name = pet.getName();
         String story = pet.getStory();
+        String condition = pet.getCondition();
         int age=pet.getAge();
         int sex=pet.getSex();
         int vaccine = pet.getVaccine();
@@ -155,6 +160,7 @@ public class DetailActivity extends AppCompatActivity {
             tv_vaccine.setText("已免疫");
         }
         tv_story.setText(story);
+        tv_condition.setText(condition);
         if(!MainActivity.userId.equals("")) {
             QueryCollect(pet.getId());
         }
@@ -164,7 +170,11 @@ public class DetailActivity extends AppCompatActivity {
         if(!s.equals("null")) {
             jzvdStd.setUp(pet.getVideo()
                     , "", JzvdStd.SCREEN_NORMAL);
-            Glide.with(this).load(pet.getUrl1()).into(jzvdStd.posterImageView);
+            Glide.with(this).setDefaultRequestOptions(
+                    new RequestOptions()
+                            .frame(1000000)
+                            .centerCrop()
+            ).asBitmap().load(pet.getVideo()).into(jzvdStd.posterImageView);
         }else{
             jzvdStd.setVisibility(View.GONE);
         }

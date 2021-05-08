@@ -370,7 +370,7 @@ public class AddFragment extends Fragment {
         RequestBody requestBody = RequestBody.create(mediaType, file);//把文件与类型放入请求体
 
         MultipartBody multipartBody = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
+                .setType(MultipartBody.FORM)  //通过form表单提交
                 .addFormDataPart("file", file.getName(), requestBody)//文件名
                 .build();
         Request request = new Request.Builder()

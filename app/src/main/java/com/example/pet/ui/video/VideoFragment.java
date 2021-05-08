@@ -209,6 +209,8 @@ public class VideoFragment extends Fragment {
 
 
     private void autoPlayVideo(RecyclerView recyclerView) {
+        //只有一个item
+        /*
         if (firstVisibleItem == 0 && lastVisibleItem == 0 && recyclerView.getChildAt(0) != null) {
             JzvdStd videoView = null;
             if (recyclerView != null && recyclerView.getChildAt(0) != null) {
@@ -221,6 +223,8 @@ public class VideoFragment extends Fragment {
                 }
             }
         }
+
+         */
 
         for (int i = 0; i <= lastVisibleItem; i++) {
             if (recyclerView == null || recyclerView.getChildAt(i) == null) {
